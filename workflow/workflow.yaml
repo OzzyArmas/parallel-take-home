@@ -1,0 +1,28 @@
+
+main:
+    params: [args]
+    steps:
+        - fizz:
+            call: http.post
+            args:
+                url: https://us-west1-esoteric-dryad-120201.cloudfunctions.net/fizz
+                body:
+                    input: ${args.input}
+            result: fizz_result
+        - buzz:
+            call: http.post
+            args:
+                url: https://us-west1-esoteric-dryad-120201.cloudfunctions.net/buzz
+                body:
+                    input: ${args.input}
+            result: buzz_result
+        - fizzbuzz:
+            call: http.post
+            args:
+                url: https://us-west1-esoteric-dryad-120201.cloudfunctions.net/fizzbuzz
+                body:
+                    fizz: ${fizz_result.body.result}
+                    buzz: ${buzz_result.body.result}
+            result: final_result
+        - return_result:
+            return: ${final_result.body.result}
